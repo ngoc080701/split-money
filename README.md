@@ -1,98 +1,288 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Money Splitting App
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A collaborative expense tracking and bill splitting application that helps groups of people track shared expenses and settle debts efficiently.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Table of Contents
 
-## Description
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Environment Setup](#environment-setup)
+  - [Running the Application](#running-the-application)
+  - [Docker Setup](#docker-setup)
+- [API Documentation](#api-documentation)
+- [Project Structure](#project-structure)
+- [Core Modules](#core-modules)
+  - [Authentication Module](#authentication-module)
+  - [User Module](#user-module)
+  - [Groups Module](#groups-module)
+  - [Bills Module](#bills-module)
+- [Business Logic](#business-logic)
+- [Database Schema](#database-schema)
+- [Development](#development)
+  - [Running Tests](#running-tests)
+  - [Migration Management](#migration-management)
+- [Contributing](#contributing)
+- [License](#license)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Overview
 
-## Project setup
+Money Splitting App is a backend service designed to simplify tracking and settling expenses within groups. It allows users to create groups, add members, create bills, track who paid what, and automatically calculates how to settle debts efficiently.
 
-```bash
-$ pnpm install
+The main problem the app solves is eliminating the complex math and mental tracking required when multiple people share expenses, especially when people pay different amounts on different occasions.
+
+## Features
+
+- **User Authentication**: Secure registration and login system
+- **Group Management**: Create and manage groups of users
+- **Bill Tracking**: Record expenses and track who paid what
+- **Smart Debt Settlement**: Automatically calculates the optimal way to settle debts
+- **Transaction Management**: Track the status of payments between users
+- **Debt Visualization**: See who owes what to whom
+
+## Tech Stack
+
+- **Backend**: NestJS (Node.js framework)
+- **Database**: MySQL with TypeORM
+- **Authentication**: JWT-based authentication
+- **API Documentation**: Swagger/OpenAPI
+- **Containerization**: Docker and Docker Compose
+- **Language**: TypeScript
+
+## Getting Started
+
+### Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- Node.js (v16 or later)
+- PNPM package manager
+- MySQL (v8.0 or later)
+- Docker and Docker Compose (for containerized setup)
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/money-splitting-app.git
+   cd money-splitting-app
+   ```
+
+2. Install dependencies:
+   ```bash
+   pnpm install
+   ```
+
+### Environment Setup
+
+Create a `.env` file in the root directory with the following variables:
+
+```env
+# Application
+PORT=3000
+NODE_ENV=development
+
+# Database
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=root
+DB_PASSWORD=your_password
+DB_DATABASE=money_app
+
+# JWT Authentication
+JWT_SECRET=your_jwt_secret_key
+JWT_EXPIRATION=1d
 ```
 
-## Compile and run the project
+### Running the Application
 
-```bash
-# development
-$ pnpm run start
+1. Start the MySQL database:
+   ```bash
+   # If running MySQL locally
+   sudo service mysql start
+   
+   # Or with Docker
+   docker-compose up -d db
+   ```
 
-# watch mode
-$ pnpm run start:dev
+2. Run database migrations:
+   ```bash
+   pnpm run migration:run
+   ```
 
-# production mode
-$ pnpm run start:prod
+3. Start the application:
+   ```bash
+   # For development
+   pnpm run start:dev
+   
+   # For production
+   pnpm run build
+   pnpm run start:prod
+   ```
+
+4. The API will be available at `http://localhost:3000`
+   - Swagger documentation: `http://localhost:3000/api/docs`
+
+### Docker Setup
+
+To run the entire application using Docker:
+
+1. Make sure Docker and Docker Compose are installed
+2. Run:
+   ```bash
+   docker-compose up -d
+   ```
+3. The application will be available at `http://localhost:3000`
+
+## API Documentation
+
+The API is documented using Swagger. When the application is running, you can access the interactive API documentation at:
+
+```
+http://localhost:3000/api/docs
 ```
 
-## Run tests
+This provides a comprehensive overview of all available endpoints, required parameters, and response formats.
 
-```bash
-# unit tests
-$ pnpm run test
+## Project Structure
 
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+```
+├── src/
+│   ├── config/               # Configuration files
+│   ├── database/             
+│   │   ├── entities/         # Base entity classes
+│   │   └── migrations/       # Database migrations
+│   ├── modules/              # Feature modules
+│   │   ├── auth/             # Authentication module
+│   │   ├── user/             # User management 
+│   │   ├── groups/           # Group management
+│   │   └── bills/            # Bill and transaction management
+│   ├── app.module.ts         # Main application module
+│   └── main.ts               # Application entry point
 ```
 
-## Deployment
+## Core Modules
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### Authentication Module
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Handles user registration, login, and JWT token management. 
+
+Key endpoints:
+- `POST /auth/register` - Register a new user
+- `POST /auth/login` - Authenticate and receive JWT token
+
+### User Module
+
+Manages user profiles and user-related operations.
+
+Key endpoints:
+- `GET /users` - Get all users
+- `GET /users/:id` - Get user by ID
+- `PUT /users/:id` - Update user information
+
+### Groups Module
+
+Manages groups and group membership. Users can create groups and add other users.
+
+Key endpoints:
+- `POST /groups` - Create a new group
+- `GET /groups` - Get all groups or user's groups
+- `GET /groups/:id` - Get group by ID
+- `POST /groups/:id/members` - Add members to a group
+
+### Bills Module
+
+The core module that handles bills, expense tracking, and debt settlement.
+
+Key endpoints:
+- `POST /bills` - Create a new bill
+- `GET /bills` - Get all bills or bills by group
+- `POST /bills/:id/assign-users` - Assign users to a bill
+- `POST /bills/:id/users` - Update bill users with paid amounts
+- `GET /bills/:id/transactions` - Get transactions for a bill
+- `PUT /transactions/:id/status` - Update transaction status
+
+## Business Logic
+
+### Bill Creation and Debt Distribution
+
+1. A group member creates a bill with a total amount.
+2. Group members are assigned to the bill.
+3. For each bill, the average amount per person is calculated (total ÷ number of members).
+4. When payments are recorded, the system calculates each person's balance:
+   - Positive balance: Paid more than their fair share
+   - Negative balance: Paid less than their fair share
+
+### Transaction Generation
+
+The system automatically:
+1. Identifies who has positive balances (creditors) and who has negative balances (debtors)
+2. Creates optimal transactions between debtors and creditors
+3. Prioritizes larger debts first
+4. Minimizes the total number of transactions needed
+
+### Transaction Flow
+
+1. All transactions start with `PENDING` status
+2. When a debtor pays, they update status to `PROCESSING`
+3. When a creditor confirms receipt, they update status to `DONE`
+
+## Database Schema
+
+The database consists of the following main tables:
+
+- **users**: Stores user information
+- **groups**: Stores group information
+- **group_members**: Maps users to groups
+- **bills**: Stores bill information (name, total amount, average amount)
+- **bill_users**: Maps users to bills and tracks each user's payment status
+- **transactions**: Records debt settlements between users
+
+## Development
+
+### Running Tests
 
 ```bash
-$ pnpm install -g mau
-$ mau deploy
+# Unit tests
+pnpm run test
+
+# E2E tests
+pnpm run test:e2e
+
+# Test coverage
+pnpm run test:cov
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Migration Management
 
-## Resources
+```bash
+# Generate a new migration
+pnpm run migration:generate src/database/migrations/NameOfMigration
 
-Check out a few resources that may come in handy when working with NestJS:
+# Run pending migrations
+pnpm run migration:run
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+# Revert the last migration
+pnpm run migration:revert
+```
 
-## Support
+## Contributing
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/my-feature`
+3. Commit changes: `git commit -am 'Add new feature'`
+4. Push to the branch: `git push origin feature/my-feature`
+5. Submit a pull request
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+## Contact
+
+For any questions or suggestions, please open an issue in the repository.

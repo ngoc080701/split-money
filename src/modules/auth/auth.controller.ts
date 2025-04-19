@@ -19,7 +19,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { TokenDto, RefreshTokenDto } from './dto/token.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { User } from 'src/database/entities/user.entity';
+import { User } from '../user/entities/user.entity';
 
 @ApiTags('auth')
 @Controller('auth')
