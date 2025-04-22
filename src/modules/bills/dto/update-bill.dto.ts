@@ -21,6 +21,11 @@ export class UpdateBillDto {
   @IsOptional()
   totalAmount?: number;
 
+  @ApiProperty({ description: 'Amount per person' })
+  @IsNumber()
+  @IsOptional()
+  perAmount?: number;
+
   @ApiProperty({
     description: 'Users and their paid amounts',
     type: [BillUserDto],

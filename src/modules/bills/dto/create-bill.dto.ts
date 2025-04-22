@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString, IsArray, ValidateNested } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  IsArray,
+  ValidateNested,
+  IsOptional,
+  ValidateIf,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class BillUserDto {
@@ -8,10 +16,10 @@ export class BillUserDto {
   @IsNotEmpty()
   userId: number;
 
-  @ApiProperty({ description: 'Amount paid by user' })
+  @ApiProperty({ description: 'Amount paid by user', required: false })
   @IsNumber()
-  @IsNotEmpty()
-  paidAmount: number;
+  @IsOptional()
+  paidAmount?: number;
 }
 
 export class CreateBillDto {
@@ -25,14 +33,32 @@ export class CreateBillDto {
   @IsNotEmpty()
   groupId: number;
 
-  @ApiProperty({ description: 'Total amount of the bill' })
+  @ApiProperty({
+    description:
+      'Total amount of the bill (required if perAmount is not provided)',
+    required: false,
+  })
   @IsNumber()
-  @IsNotEmpty()
-  totalAmount: number;
+  @ValidateIf((o) => o.perAmount === undefined)
+  @IsNotEmpty({ message: 'Either totalAmount or perAmount must be provided' })
+  totalAmount?: number;
 
-  @ApiProperty({ description: 'Users and their paid amounts', type: [BillUserDto] })
+  @ApiProperty({
+    description: 'Amount per person (required if totalAmount is not provided)',
+    required: false,
+  })
+  @IsNumber()
+  @ValidateIf((o) => o.totalAmount === undefined)
+  @IsNotEmpty({ message: 'Either totalAmount or perAmount must be provided' })
+  perAmount?: number;
+
+  @ApiProperty({
+    description: 'Users assigned to the bill',
+    type: [BillUserDto],
+  })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => BillUserDto)
+  @IsNotEmpty({ message: 'At least one user must be assigned to the bill' })
   users: BillUserDto[];
 }

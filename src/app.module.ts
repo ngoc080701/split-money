@@ -7,6 +7,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { GroupsModule } from './modules/groups/groups.module';
 import typeorm from './config/typeorm';
+import { BillsModule } from './modules/bills/bills.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import typeorm from './config/typeorm';
     AuthModule,
     UserModule,
     GroupsModule,
+    BillsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

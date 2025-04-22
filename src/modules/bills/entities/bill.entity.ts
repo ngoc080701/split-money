@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+  OneToMany,
+} from 'typeorm';
 import { BaseEntity } from '../../../database/entities/base.entity';
 import { Group } from '../../groups/entities/group.entity';
 import { User } from '../../user/entities/user.entity';
@@ -24,13 +31,25 @@ export class Bill extends BaseEntity {
   @ApiProperty({ description: 'User ID of bill creator' })
   createdBy: number;
 
-  @Column({ name: 'total_amount', type: 'decimal', precision: 12, scale: 2 })
+  @Column({
+    name: 'total_amount',
+    type: 'decimal',
+    precision: 12,
+    scale: 2,
+    nullable: true,
+  })
   @ApiProperty({ description: 'Total amount of the bill' })
   totalAmount: number;
 
-  @Column({ name: 'avg_amount', type: 'decimal', precision: 12, scale: 2 })
-  @ApiProperty({ description: 'Average amount per person' })
-  avgAmount: number;
+  @Column({
+    name: 'per_amount',
+    type: 'decimal',
+    precision: 12,
+    scale: 2,
+    nullable: true,
+  })
+  @ApiProperty({ description: 'Amount per person' })
+  perAmount: number;
 
   @ManyToOne(() => Group, (group) => group.id)
   @JoinColumn({ name: 'group_id' })

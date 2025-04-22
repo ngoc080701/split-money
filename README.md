@@ -209,17 +209,20 @@ Key endpoints:
 
 ### Bill Creation and Debt Distribution
 
-1. A group member creates a bill with a total amount.
-2. Group members are assigned to the bill.
-3. For each bill, the average amount per person is calculated (total ÷ number of members).
-4. When payments are recorded, the system calculates each person's balance:
-   - Positive balance: Paid more than their fair share
-   - Negative balance: Paid less than their fair share
+1. A group member creates a bill with either:
+   - A `totalAmount` (total bill cost to be divided among members)
+   - A `perAmount` (specific amount per person, for individual or identical contributions)
+2. Users must be assigned to the bill during creation.
+3. When using `totalAmount`, the system calculates `perAmount` by dividing total by the number of assigned members.
+4. The bill_users table tracks each user's financial position with two columns:
+   - `debtAmount`: How much the user owes (positive value when perAmount is positive)
+   - `surplusAmount`: How much the user is owed (positive value when perAmount is negative)
+5. The system validates that total debts and surpluses within a bill are balanced (sum to zero).
 
 ### Transaction Generation
 
 The system automatically:
-1. Identifies who has positive balances (creditors) and who has negative balances (debtors)
+1. Identifies who has surpluses (creditors) and who has debts (debtors)
 2. Creates optimal transactions between debtors and creditors
 3. Prioritizes larger debts first
 4. Minimizes the total number of transactions needed
